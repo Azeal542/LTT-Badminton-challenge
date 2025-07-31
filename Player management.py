@@ -6,10 +6,13 @@ data = pd.read_csv(datasheet)
 #print(data)
 def create_user():
     name = input("Enter player name:", ).upper()
-    last_id = data['UserID'].iloc[-1]
-    next_id = int(last_id) + 1
+    if data.empty:
+        next_id = 1
+    else:
+        last_id = data['UserID'].iloc[-1]
+        next_id = int(last_id) + 1  
 
-    new = pd.DataFrame([[next_id, name, 1500]], columns=['UserID', 'Name', 'ELO'])
+    new = pd.DataFrame([[next_id, name, 1800]], columns=['UserID', 'Name', 'ELO'])
     new.to_csv(datasheet, mode='a', index=False, header=False)
 
 def elo_calc():
@@ -36,6 +39,18 @@ def elo_calc():
     data.loc[windex, 'ELO'] = As
     data.loc[losdex, 'ELO'] = Bs
     data.to_csv(datasheet, index=False)
+    
+    gamerec = "GameRecord.csv"
+    game = pd.read_csv(gamerec)
+
+    if game.empty:
+        next_id = 1
+    else:
+        last_id = data['UserID'].iloc[-1]
+        next_id = int(last_id) + 1  
+
+    new = pd.DataFrame([[next_id, player1, player2, eval]], columns=['GameID', 'Winner', 'Loser', 'ELO change'])
+    new.to_csv(gamerec, mode='a', index=False, header=False)
 
 elo_calc()
 #create_user()
