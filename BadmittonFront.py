@@ -1,3 +1,4 @@
+import csv
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 import PlayerManagement
@@ -13,6 +14,9 @@ class BadmintonApp(tk.Tk):
 
         record_game_btn = tk.Button(self, text="Record Game", command=self.open_record_game)
         record_game_btn.pack(pady=10)
+
+        show_data_btn = tk.Button(self, text="Show Player Data", command=self.show_player_data)
+        show_data_btn.pack(pady=10)
 
     def open_add_player(self):
         def submit():
@@ -55,6 +59,27 @@ class BadmintonApp(tk.Tk):
         player2_entry = tk.Entry(record_game_win)
         player2_entry.pack(padx=10, pady=5)
         tk.Button(record_game_win, text="Record", command=submit).pack(pady=10)
+    
+    def show_player_data(self):
+        try:
+            with open("Player sheet.csv", newline='') as csvfile:
+                reader = csv.reader(csvfile)
+                data = list(reader)
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not read Player sheet.csv: {e}")
+            return
+
+        data_win = tk.Toplevel(self)
+        data_win.title("Player Data")
+
+        if not data:
+            tk.Label(data_win, text="No data found.").pack(padx=10, pady=10)
+            return
+
+        for i, row in enumerate(data):
+            for j, value in enumerate(row):
+                e = tk.Label(data_win, text=value, borderwidth=1, relief="solid", padx=10, pady=5)
+                e.grid(row=i, column=j, sticky="nsew")
 
 if __name__ == "__main__":
     app = BadmintonApp()
