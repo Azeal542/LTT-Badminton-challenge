@@ -4,8 +4,8 @@ import numpy as np
 datasheet = "Player sheet.csv"
 data = pd.read_csv(datasheet)
 #print(data)
-def create_user():
-    name = input("Enter player name:", ).upper()
+def create_user(name):
+    name = name.upper()
     if data.empty:
         next_id = 1
     else:
@@ -15,9 +15,9 @@ def create_user():
     new = pd.DataFrame([[next_id, name, 1800]], columns=['UserID', 'Name', 'ELO'])
     new.to_csv(datasheet, mode='a', index=False, header=False)
 
-def elo_calc():
-    player1 = input("Enter winner's name: ").upper()
-    player2 = input("Enter loser's name: ").upper()
+def elo_calc(win, los):
+    player1 = win.upper()
+    player2 = los.upper()
 
     winner = data.loc[data['Name'] == player1]
     loser =  data.loc[data['Name'] == player2]
@@ -31,8 +31,8 @@ def elo_calc():
     eval = round(20 * (1 - dev))
     As = A + eval
     Bs = B - eval
-    print(As)
-    print(Bs)
+    #print(As)
+    #print(Bs)
     windex = data.loc[data['Name'] == player1].index[0]
     losdex = data.loc[data['Name'] == player2].index[0]
 
@@ -52,5 +52,5 @@ def elo_calc():
     new = pd.DataFrame([[next_id, player1, player2, eval]], columns=['GameID', 'Winner', 'Loser', 'ELO change'])
     new.to_csv(gamerec, mode='a', index=False, header=False)
 
-elo_calc()
+#elo_calc()
 #create_user()
