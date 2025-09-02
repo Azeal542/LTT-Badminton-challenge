@@ -7,7 +7,7 @@ class BadmintonApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Badminton Challenge")
-        self.geometry("300x150")
+        self.geometry("300x300")
 
         add_player_btn = tk.Button(self, text="Add Player", command=self.open_add_player)
         add_player_btn.pack(pady=10)
@@ -17,6 +17,9 @@ class BadmintonApp(tk.Tk):
 
         show_data_btn = tk.Button(self, text="Show Player Data", command=self.show_player_data)
         show_data_btn.pack(pady=10)
+
+        show_game_data_btn = tk.Button(self, text="Show Game Data", command=self.show_game_data)
+        show_game_data_btn.pack(pady=10)
 
     def open_add_player(self):
         def submit():
@@ -71,6 +74,27 @@ class BadmintonApp(tk.Tk):
 
         data_win = tk.Toplevel(self)
         data_win.title("Player Data")
+
+        if not data:
+            tk.Label(data_win, text="No data found.").pack(padx=10, pady=10)
+            return
+
+        for i, row in enumerate(data):
+            for j, value in enumerate(row):
+                e = tk.Label(data_win, text=value, borderwidth=1, relief="solid", padx=10, pady=5)
+                e.grid(row=i, column=j, sticky="nsew")
+    
+    def show_game_data(self):
+        try:
+            with open("GameRecord.csv", newline='') as csvfile:
+                reader = csv.reader(csvfile)
+                data = list(reader)
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not read GameRecord.csv: {e}")
+            return
+
+        data_win = tk.Toplevel(self)
+        data_win.title("Game Data")
 
         if not data:
             tk.Label(data_win, text="No data found.").pack(padx=10, pady=10)
